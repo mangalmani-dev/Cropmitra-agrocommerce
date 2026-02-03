@@ -6,15 +6,25 @@ import { ClipLoader } from "react-spinners";
 import AuthNavbar from "../components/AuthNavbar";
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+
   const { login, loading } = useAuthStore();
   const navigate = useNavigate();
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) =>{
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const { email, password } = formData;
 
     if (!email || !password) {
@@ -23,9 +33,25 @@ const Login = () => {
     }
 
     const success = await login(formData);
-    if (success) navigate("/home");
 
-    setFormData({ email: "", password: "" });
+    if (success) {
+
+      // 🔥 Zustand se latest user nikalo
+      const user = useAuthStore.getState().user;
+
+      // ✅ ROLE BASED REDIRECT
+      if (user.role === "admin") {
+        navigate("/admin/dashboard");
+      } 
+      else if (user.role === "farmer") {
+        navigate("/my-crops"); // farmer panel
+      } 
+      else {
+        navigate("/home"); // normal user
+      }
+
+      setFormData({ email: "", password: "" });
+    }
   };
 
   return (
@@ -50,11 +76,13 @@ const Login = () => {
             <h2 className="text-3xl font-bold text-center text-green-700 mb-2">
               Welcome Back 🌱
             </h2>
+
             <p className="text-center text-gray-500 mb-6">
               Login to continue
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+
               <input
                 type="email"
                 name="email"
@@ -62,7 +90,7 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 
-                  focus:ring-2 focus:ring-green-500 focus:outline-none"
+                focus:ring-2 focus:ring-green-500 focus:outline-none"
                 required
               />
 
@@ -73,7 +101,7 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 
-                  focus:ring-2 focus:ring-green-500 focus:outline-none"
+                focus:ring-2 focus:ring-green-500 focus:outline-none"
                 required
               />
 
@@ -81,10 +109,11 @@ const Login = () => {
                 type="submit"
                 disabled={loading}
                 className="w-full bg-green-600 hover:bg-green-700 
-                  text-white font-semibold py-2.5 rounded-lg transition"
+                text-white font-semibold py-2.5 rounded-lg transition"
               >
                 Login
               </button>
+
             </form>
 
             <div className="text-center mt-4">
@@ -105,6 +134,7 @@ const Login = () => {
                 Sign up
               </Link>
             </p>
+
           </div>
         )}
       </div>

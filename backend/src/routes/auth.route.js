@@ -4,6 +4,7 @@ import { uploadProfileImage } from "../controllers/user.controller.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { upload } from "../middleware/multer.middleware.js";
 
+
 const router = express.Router();
 
 // Auth
@@ -19,5 +20,9 @@ router.post(
   upload.single("image"),
   uploadProfileImage
 );
+
+ // router  for admin only
+
+
 
 export default router;

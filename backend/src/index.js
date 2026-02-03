@@ -10,6 +10,7 @@ import orderRoutes from "./routes/orders.route.js"
 import analyticsRoutes from "./routes/analytics.route.js"
 import farmerRoutes from "./routes/farmer.routes.js"
 import cartRoutes from "./routes/cart.routes.js"
+import adminRoutes from "./routes/admin.routes.js"
 
 
 
@@ -42,6 +43,7 @@ app.use("/api/cart", cartRoutes);
 
 app.use("/api/orders",orderRoutes)
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/admin", adminRoutes);
 
 
 connectDB()

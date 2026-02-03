@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Order from "../models/orders.model.js"
+import Order from "../models/order.model.js"
 
 // 1️⃣ All Orders Analytics
 
