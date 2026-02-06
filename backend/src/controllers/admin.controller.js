@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import Crop from "../models/crops.model.js";
 import Order from "../models/order.model.js";
+import FarmerProfile from "../models/farmer.model.js";
 
 
 // ======================================
@@ -59,23 +60,23 @@ export const getDashboard = async (req, res) => {
 // ======================================
 // ✅ GET PENDING FARMERS
 // ======================================
-
 export const getPendingFarmers = async (req, res) => {
-
   try {
 
-    const farmers = await User.find({
-      role:"user",
-      isFarmerApproved:false
-    }).select("-password");
+    const farmers = await FarmerProfile.find({
+      isApproved: false
+    })
+    .populate("user", "name email")
+    .sort({ createdAt: -1 });
 
     res.status(200).json({
       success:true,
-      count:farmers.length,
       farmers
     });
 
   } catch (error) {
+
+    console.error(error);
 
     res.status(500).json({
       success:false,
@@ -89,32 +90,30 @@ export const getPendingFarmers = async (req, res) => {
 // ======================================
 // ✅ APPROVE FARMER
 // ======================================
-
 export const approveFarmer = async (req, res) => {
 
   try {
 
-    const user = await User.findById(req.params.id);
+    const farmer = await FarmerProfile.findById(req.params.id);
 
-    if(!user){
+    if(!farmer){
       return res.status(404).json({
         success:false,
-        message:"User not found"
+        message:"Farmer not found"
       });
     }
 
-    user.role = "farmer";
-    user.isFarmerApproved = true;
-    user.rejectionReason = "";
-
-    await user.save();
+    farmer.isApproved = true;
+    await farmer.save();
 
     res.status(200).json({
       success:true,
-      message:"Farmer approved successfully"
+      message:"Farmer approved"
     });
 
   } catch (error) {
+
+    console.error(error);
 
     res.status(500).json({
       success:false,
@@ -133,25 +132,11 @@ export const rejectFarmer = async (req, res) => {
 
   try {
 
-    const { reason } = req.body;
-
-    const user = await User.findById(req.params.id);
-
-    if(!user){
-      return res.status(404).json({
-        success:false,
-        message:"User not found"
-      });
-    }
-
-    user.isFarmerApproved = false;
-    user.rejectionReason = reason || "Application rejected";
-
-    await user.save();
+    await FarmerProfile.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       success:true,
-      message:"Farmer rejected"
+      message:"Farmer rejected and removed"
     });
 
   } catch (error) {
@@ -283,15 +268,16 @@ export const getAllFarmers = async (req, res) => {
 
   try {
 
-    const farmers = await User.find({
-      role:"farmer"
-    })
-    .select("-password")
-    .sort({createdAt:-1});
+    const farmers = await FarmerProfile.find()
+      .populate({
+        path: "user",
+        select: "name email isBlocked"
+      })
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
-      success:true,
-      count:farmers.length,
+      success: true,
+      count: farmers.length,
       farmers
     });
 
@@ -305,12 +291,23 @@ export const getAllFarmers = async (req, res) => {
 };
   
 
-   // get all orders
 export const getAllOrders = async (req,res)=>{
  try{
 
    const orders = await Order.find()
+
    .populate("buyer","name email")
+
+   .populate({
+     path:"items.crop",
+     select:"name price"
+   })
+
+   .populate({
+     path:"items.farmer",
+     select:"name email"
+   })
+
    .sort({createdAt:-1});
 
    res.json({

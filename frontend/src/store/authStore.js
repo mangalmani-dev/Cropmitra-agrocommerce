@@ -67,8 +67,10 @@ export const useAuthStore = create(
           set({ user });
 
           toast.success(res.data.message || "Logged in successfully!");
+             
 
           return user; // ✅ return user instead of true
+            
 
         } catch (err) {
 
@@ -92,6 +94,7 @@ export const useAuthStore = create(
           set({ user: null });
 
           toast.success("Logged out successfully!");
+              window.location.href = "/login";
 
         } catch (err) {
 

@@ -9,11 +9,16 @@ const AdminOrders = () => {
    fetchOrders();
  },[]);
 
- if(loading) return <h1>Loading Orders...</h1>;
+ if(loading) return <h1 className="p-6 text-xl font-bold">Loading Orders...</h1>;
 
+ // ✅ Stats
  const totalRevenue = orders?.reduce(
-   (acc,order)=> acc + order.totalPrice,0
+   (acc,order)=> acc + (order.totalPrice || 0),0
  );
+
+ const pendingOrders = orders?.filter(o=>o.status==="pending").length;
+ const completedOrders = orders?.filter(o=>o.status==="delivered").length;
+ const cancelledOrders = orders?.filter(o=>o.status==="cancelled").length;
 
  return (
 
@@ -34,8 +39,8 @@ Track platform orders and monitor revenue.
 </div>
 
 
-{/* 🔥 STATS CARDS */}
-<div className="grid grid-cols-3 gap-6 mb-8">
+{/* 🔥 STATS */}
+<div className="grid grid-cols-4 gap-6 mb-8">
 
 <div className="bg-white p-6 rounded-2xl shadow-lg">
 <p className="text-gray-500">Total Orders</p>
@@ -54,9 +59,14 @@ Track platform orders and monitor revenue.
 <div className="bg-white p-6 rounded-2xl shadow-lg">
 <p className="text-gray-500">Pending</p>
 <h2 className="text-3xl font-bold text-orange-500">
-{
-orders?.filter(o=>o.status==="pending").length
-}
+{pendingOrders}
+</h2>
+</div>
+
+<div className="bg-white p-6 rounded-2xl shadow-lg">
+<p className="text-gray-500">Completed</p>
+<h2 className="text-3xl font-bold text-green-600">
+{completedOrders}
 </h2>
 </div>
 
@@ -64,13 +74,14 @@ orders?.filter(o=>o.status==="pending").length
 
 
 {/* 🔥 TABLE */}
-<div className="bg-white rounded-3xl shadow-2xl p-6 border border-gray-100">
+<div className="bg-white rounded-3xl shadow-2xl p-6 border border-gray-100 overflow-x-auto">
 
 <table className="w-full">
 
 <thead className="border-b">
 <tr className="text-gray-600">
 <th className="p-4 text-left">Customer</th>
+<th className="p-4 text-left">Order Details</th>
 <th className="p-4 text-left">Amount</th>
 <th className="p-4 text-left">Status</th>
 <th className="p-4 text-left">Date</th>
@@ -79,25 +90,62 @@ orders?.filter(o=>o.status==="pending").length
 
 <tbody>
 
+{orders?.length === 0 && (
+<tr>
+<td colSpan="5" className="text-center p-8 text-gray-400">
+No Orders Found 🚜
+</td>
+</tr>
+)}
+
 {orders?.map(order=>(
 <tr
  key={order._id}
- className="hover:bg-indigo-50 hover:scale-[1.01] transition duration-200"
+ className="hover:bg-indigo-50 transition duration-200"
 >
 
+{/* Customer */}
 <td className="p-4">
 <p className="font-semibold">
-{order.buyer?.name}
+{order.buyer?.name || "Unknown"}
 </p>
 <p className="text-gray-500 text-sm">
 {order.buyer?.email}
 </p>
 </td>
 
+{/* Order Details */}
+<td className="p-4 space-y-2">
+
+{order.orderItems?.map((item,index)=>(
+<div
+ key={index}
+ className="bg-slate-50 px-3 py-2 rounded-lg"
+>
+
+<p className="font-semibold">
+🌾 {item.crop?.name}
+</p>
+
+<p className="text-xs text-gray-500">
+Qty: {item.quantity} kg
+</p>
+
+<p className="text-xs text-gray-400">
+Farmer: {item.farmer?.name}
+</p>
+
+</div>
+))}
+
+</td>
+
+{/* Amount */}
 <td className="p-4 font-bold text-emerald-600">
 ₹ {order.totalPrice}
 </td>
 
+{/* Status */}
 <td className="p-4">
 
 {order.status === "pending" && (
@@ -120,6 +168,7 @@ Cancelled
 
 </td>
 
+{/* Date */}
 <td className="p-4 text-gray-500">
 {new Date(order.createdAt).toLocaleDateString()}
 </td>

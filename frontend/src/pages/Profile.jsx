@@ -1,5 +1,4 @@
 import ProfileTopBar from "../components/ProfileTopBar";
-import ProfileNavbar from "../components/ProfileTopBar";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 
@@ -7,43 +6,60 @@ const Profile = () => {
   const { user, loading } = useAuthStore();
   const navigate = useNavigate();
 
-  // 🔐 Guards
   if (loading) {
-    return <p className="text-center mt-10">Loading...</p>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
   if (!user) {
-    return <p className="text-center mt-10">Please login</p>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Please login
+      </div>
+    );
   }
 
   return (
     <>
-      {/* 🔝 Profile Navbar */}
       <ProfileTopBar />
 
-      {/* 📄 Profile Content */}
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="max-w-4xl p-6 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-lime-50">
+        <div className="max-w-6xl mx-auto px-6 py-10">
 
-          <h1 className="text-2xl font-bold mb-6">My Profile</h1>
+          {/* ACTION CARDS */}
+          <div className="grid sm:grid-cols-2 gap-8 mt-10">
+            {[
+              { title: "My Orders", icon: "📦", path: "/orders" },
+              { title: "Addresses", icon: "📍", path: "/addresses" },
+            ].map((card) => (
+              <div
+                key={card.title}
+                onClick={() => navigate(card.path)}
+                className="
+                  cursor-pointer
+                  bg-white/70
+                  backdrop-blur-xl
+                  border border-white/40
+                  rounded-3xl
+                  p-8
+                  shadow-lg
+                  hover:-translate-y-2
+                  hover:shadow-2xl
+                  transition
+                "
+              >
+                <h2 className="text-2xl font-bold">
+                  {card.icon} {card.title}
+                </h2>
 
-          {/* ⭐ Farmer Action Buttons */}
-          <div className="flex gap-4 justify-center">
-
-            <button
-              onClick={() => navigate("/add-crop")}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg"
-            >
-              Add Crop 🌾
-            </button>
-
-            <button
-              onClick={() => navigate("/my-crops")}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
-            >
-              My Crops 📦
-            </button>
-
+                <p className="text-gray-500 mt-2">
+                  Manage your {card.title.toLowerCase()}
+                </p>
+              </div>
+            ))}
           </div>
 
         </div>

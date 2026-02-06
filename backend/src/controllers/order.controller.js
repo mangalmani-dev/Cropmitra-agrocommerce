@@ -5,6 +5,7 @@ import FarmerProfile from "../models/order.model.js"
 
 // PLACE ORDER
 export const placeOrder = async (req, res) => {
+    const { address, paymentMethod } = req.body; // ⭐ ADD THIS
   const cart = await Cart.findOne({ user: req.user._id }).populate("items.crop");
 
   if (!cart || cart.items.length === 0) {
@@ -35,13 +36,13 @@ export const placeOrder = async (req, res) => {
       price: item.priceAtAddTime
     });
   }
-
-  const order = await Order.create({
-    buyer: req.user._id,
-    items: orderItems,
-    totalAmount
-  });
-
+const order = await Order.create({
+  buyer: req.user._id,
+  items: orderItems,
+  totalAmount,
+  address, // ⭐ THIS WAS MISSING
+  paymentMethod: paymentMethod || "COD"
+});
   await Cart.findOneAndDelete({ user: req.user._id });
 
   res.status(201).json({

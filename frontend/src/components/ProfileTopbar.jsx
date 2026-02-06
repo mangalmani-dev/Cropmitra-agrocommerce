@@ -12,7 +12,10 @@ const ProfileTopBar = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [showFarmerForm, setShowFarmerForm] = useState(false);
 
-  // 🔹 Close dropdown on outside click
+  //////////////////////////////////////////
+  // Close dropdown on outside click
+  //////////////////////////////////////////
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -30,17 +33,39 @@ const ProfileTopBar = () => {
   return (
     <>
       {/* ================= TOP BAR ================= */}
-      <div className="w-full border-b bg-white">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
-          {/* 🔹 LEFT: Profile Info */}
-          <div className="flex items-center gap-4">
+      <div
+        className="
+        w-full 
+        sticky top-0 z-40
+        bg-white/70 
+        backdrop-blur-xl
+        border-b border-white/40
+        shadow-md
+        "
+      >
+        <div className="max-w-7xl mx-auto px-6 h-[88px] flex items-center justify-between">
+
+          {/* LEFT SIDE */}
+          <div className="flex items-center gap-5">
 
             {/* Avatar + Dropdown */}
             <div className="relative" ref={menuRef}>
               <div
                 onClick={() => setShowMenu((prev) => !prev)}
-                className="w-12 h-12 rounded-full border cursor-pointer overflow-hidden bg-gray-100 flex items-center justify-center font-semibold"
+                className="
+                  w-16 h-16
+                  rounded-full
+                  cursor-pointer
+                  overflow-hidden
+                  bg-green-600/10
+                  flex items-center justify-center
+                  font-bold text-green-700
+                  ring-2 ring-white
+                  shadow-sm
+                  hover:scale-105
+                  transition
+                "
                 title="Profile options"
               >
                 {user.profileImage ? (
@@ -50,27 +75,42 @@ const ProfileTopBar = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span>{user.name?.charAt(0).toUpperCase()}</span>
+                  <span className="text-xl">
+                    {user.name?.charAt(0).toUpperCase()}
+                  </span>
                 )}
               </div>
 
-              {/* 🔽 Dropdown Menu */}
+              {/* DROPDOWN */}
               {showMenu && (
                 <div
-                  className="absolute top-14 left-0 bg-white border rounded-lg shadow-md w-40 z-50 overflow-hidden"
+                  className="
+                    absolute top-20 left-0
+                    bg-white/90 backdrop-blur-lg
+                    border border-white/40
+                    rounded-xl
+                    shadow-xl
+                    w-48
+                    z-50
+                    overflow-hidden
+                  "
                   onMouseDown={(e) => e.stopPropagation()}
                 >
                   {user.profileImage && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowPreview(true);
-                        setShowMenu(false);
-                      }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                    >
-                      👁 View Image
-                    </button>
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowPreview(true);
+                          setShowMenu(false);
+                        }}
+                        className="w-full text-left px-4 py-3 hover:bg-gray-100 text-sm"
+                      >
+                        👁 View Image
+                      </button>
+
+                      <div className="border-t"></div>
+                    </>
                   )}
 
                   <button
@@ -79,7 +119,7 @@ const ProfileTopBar = () => {
                       fileRef.current.click();
                       setShowMenu(false);
                     }}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                    className="w-full text-left px-4 py-3 hover:bg-gray-100 text-sm"
                   >
                     🔄 Change Image
                   </button>
@@ -87,7 +127,7 @@ const ProfileTopBar = () => {
               )}
             </div>
 
-            {/* Hidden file input */}
+            {/* Hidden File Input */}
             <input
               type="file"
               ref={fileRef}
@@ -100,33 +140,70 @@ const ProfileTopBar = () => {
               }}
             />
 
-            {/* Name / Email / Role */}
+            {/* USER INFO */}
             <div>
-              <p className="font-semibold text-gray-900">
+              <p className="font-semibold text-gray-900 text-lg">
                 {user.name}
               </p>
+
               <p className="text-sm text-gray-500">
                 {user.email}
               </p>
-              <p className="text-xs text-green-600 font-semibold">
-                {user.role}
-              </p>
+
+              <span
+                className="
+                  inline-block
+                  mt-1
+                  bg-green-100
+                  text-green-700
+                  px-3 py-1
+                  rounded-full
+                  text-xs
+                  font-semibold
+                  capitalize
+                "
+              >
+                {user?.role}
+              </span>
             </div>
           </div>
 
-          {/* 🔹 RIGHT: Upgrade Button */}
+          {/* RIGHT SIDE */}
           <div>
             {user.role !== "farmer" ? (
               <button
                 type="button"
                 onClick={() => setShowFarmerForm(true)}
                 disabled={loading}
-                className="bg-green-600 text-white px-5 py-2 rounded-lg text-sm hover:bg-green-700 disabled:opacity-50"
+                className="
+                  bg-gradient-to-r
+                  from-green-600
+                  to-emerald-500
+                  text-white
+                  px-7 py-3
+                  rounded-xl
+                  text-sm
+                  font-semibold
+                  hover:scale-105
+                  active:scale-95
+                  transition
+                  shadow-md
+                  disabled:opacity-50
+                "
               >
-                Upgrade to Farmer 🌾
+                Become a Farmer 🌾
               </button>
             ) : (
-              <span className="text-green-600 font-semibold">
+              <span
+                className="
+                  bg-green-100
+                  text-green-700
+                  px-5 py-2.5
+                  rounded-full
+                  text-sm
+                  font-semibold
+                "
+              >
                 Farmer ✔
               </span>
             )}
@@ -134,14 +211,15 @@ const ProfileTopBar = () => {
         </div>
       </div>
 
-      {/* ================= IMAGE PREVIEW MODAL ================= */}
+      {/* ================= IMAGE PREVIEW ================= */}
+
       {showPreview && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-4 relative">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-5 relative shadow-xl">
             <button
               type="button"
               onClick={() => setShowPreview(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-black"
+              className="absolute top-2 right-3 text-gray-500 hover:text-black"
             >
               ✕
             </button>
@@ -149,13 +227,14 @@ const ProfileTopBar = () => {
             <img
               src={user.profileImage}
               alt="profile"
-              className="w-72 h-72 object-cover rounded-lg"
+              className="w-80 h-80 object-cover rounded-xl"
             />
           </div>
         </div>
       )}
 
-      {/* ================= FARMER APPLY FORM MODAL ================= */}
+      {/* ================= FARMER FORM ================= */}
+
       {showFarmerForm && (
         <FarmerApplyForm
           onClose={() => setShowFarmerForm(false)}
