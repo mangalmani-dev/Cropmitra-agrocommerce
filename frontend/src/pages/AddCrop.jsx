@@ -1,32 +1,41 @@
 import { useState } from "react";
-import { useCropStore } from "../store/useCropStore";
+import { useFarmerCropStore } from "../store/farmerCropStore";
+
+const CATEGORY_OPTIONS = [
+  "fruit",
+  "vegetable",
+  "grain",
+  "pulse",
+  "other"
+];
 
 const AddCrop = () => {
 
-  const { addCrop, loading } = useCropStore();
+  const { addCrop, addLoading } = useFarmerCropStore();
 
-  const [form, setForm] = useState({
+  const initialState = {
     name: "",
     category: "",
     description: "",
     quantity: "",
-    unit: "",
+    unit: "kg",
     price: "",
     discount: "",
     expiryDate: "",
     organic: false,
     location: ""
-  });
+  };
 
+  const [form, setForm] = useState(initialState);
   const [image, setImage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    setForm({
-      ...form,
+    setForm(prev => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -34,13 +43,27 @@ const AddCrop = () => {
 
     const data = new FormData();
 
-    Object.keys(form).forEach(key => {
-      data.append(key, form[key]);
+    Object.entries(form).forEach(([key, value]) => {
+
+      // convert numbers properly
+      if (["quantity", "price", "discount"].includes(key)) {
+        data.append(key, Number(value));
+      } else {
+        data.append(key, value);
+      }
+
     });
 
-    if (image) data.append("image", image);
+    if (image) {
+      data.append("image", image);
+    }
 
-    await addCrop(data);
+    const success = await addCrop(data);
+
+    if(success){
+      setForm(initialState);
+      setImage(null);
+    }
   };
 
   return (
@@ -52,78 +75,109 @@ const AddCrop = () => {
           🌾 Add New Crop
         </h2>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
 
-          {/* Crop Name */}
+          {/* Name */}
           <input
             name="name"
+            value={form.name}
             placeholder="Crop Name"
             onChange={handleChange}
-            className="border p-3 rounded-lg focus:outline-green-500"
+            className="border p-3 rounded-lg"
+            required
           />
 
           {/* Category */}
-          <input
+          <select
             name="category"
-            placeholder="Category"
+            value={form.category}
             onChange={handleChange}
-            className="border p-3 rounded-lg focus:outline-green-500"
-          />
+            className="border p-3 rounded-lg"
+            required
+          >
+            <option value="">Select Category</option>
+
+            {CATEGORY_OPTIONS.map(cat => (
+              <option key={cat} value={cat}>
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </option>
+            ))}
+
+          </select>
 
           {/* Quantity */}
           <input
             name="quantity"
+            type="number"
+            value={form.quantity}
             placeholder="Quantity"
             onChange={handleChange}
-            className="border p-3 rounded-lg focus:outline-green-500"
+            className="border p-3 rounded-lg"
+            required
           />
 
           {/* Unit */}
-          <input
+          <select
             name="unit"
-            placeholder="Unit (Kg / Ton)"
+            value={form.unit}
             onChange={handleChange}
-            className="border p-3 rounded-lg focus:outline-green-500"
-          />
+            className="border p-3 rounded-lg"
+          >
+            <option value="kg">kg</option>
+            <option value="ton">ton</option>
+            <option value="quintal">quintal</option>
+          </select>
 
           {/* Price */}
           <input
             name="price"
+            type="number"
+            value={form.price}
             placeholder="Price"
             onChange={handleChange}
-            className="border p-3 rounded-lg focus:outline-green-500"
+            className="border p-3 rounded-lg"
+            required
           />
 
           {/* Discount */}
           <input
             name="discount"
+            type="number"
+            value={form.discount}
             placeholder="Discount %"
             onChange={handleChange}
-            className="border p-3 rounded-lg focus:outline-green-500"
+            className="border p-3 rounded-lg"
           />
 
-          {/* Expiry Date */}
+          {/* Expiry */}
           <input
             type="date"
             name="expiryDate"
+            value={form.expiryDate}
             onChange={handleChange}
-            className="border p-3 rounded-lg focus:outline-green-500"
+            className="border p-3 rounded-lg"
           />
 
           {/* Location */}
           <input
             name="location"
+            value={form.location}
             placeholder="Location"
             onChange={handleChange}
-            className="border p-3 rounded-lg focus:outline-green-500"
+            className="border p-3 rounded-lg"
+            required
           />
 
           {/* Description */}
           <textarea
             name="description"
+            value={form.description}
             placeholder="Description"
             onChange={handleChange}
-            className="border p-3 rounded-lg md:col-span-2 focus:outline-green-500"
+            className="border p-3 rounded-lg md:col-span-2"
           />
 
           {/* Organic */}
@@ -131,25 +185,26 @@ const AddCrop = () => {
             <input
               type="checkbox"
               name="organic"
+              checked={form.organic}
               onChange={handleChange}
-              className="w-5 h-5"
             />
-            <span className="font-medium">Organic Crop</span>
+            Organic Crop
           </label>
 
-          {/* Image Upload */}
+          {/* Image */}
           <input
             type="file"
-            onChange={(e) => setImage(e.target.files[0])}
+            accept="image/*"
+            onChange={(e)=>setImage(e.target.files[0])}
             className="md:col-span-2 border p-2 rounded-lg"
           />
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
-            disabled={loading}
-            className="md:col-span-2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition"
+            disabled={addLoading}
+            className="md:col-span-2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold"
           >
-            {loading ? "Adding Crop..." : "Add Crop 🌱"}
+            {addLoading ? "Adding Crop..." : "Add Crop 🌱"}
           </button>
 
         </form>

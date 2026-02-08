@@ -1,11 +1,10 @@
 import Crop from "../models/crops.model.js";
-import User from "../models/user.model.js";
 import { uploadOnCloudinary } from "../libs/cloudinary.js";
+
 
 // ------------------ FARMER CONTROLLERS ------------------
 
-// Add a new crop
-
+// ✅ Add a new crop
 export const addCrop = async (req, res) => {
   try {
     const {
@@ -23,7 +22,6 @@ export const addCrop = async (req, res) => {
 
     let images = [];
 
-    // 🔴 handle image upload
     if (req.file) {
       const cloudRes = await uploadOnCloudinary(req.file.path);
       if (!cloudRes) {
@@ -32,12 +30,12 @@ export const addCrop = async (req, res) => {
       images.push(cloudRes.secure_url);
     }
 
-    const crop = new Crop({
+    const crop = await Crop.create({
       farmer: req.user._id,
       name,
       category,
       description,
-      images, // ✅ cloudinary URLs
+      images,
       quantity,
       unit,
       price,
@@ -47,8 +45,10 @@ export const addCrop = async (req, res) => {
       location
     });
 
-    await crop.save();
-    res.status(201).json({ message: "Crop added successfully", crop });
+    res.status(201).json({
+      message: "Crop added successfully",
+      crop
+    });
 
   } catch (error) {
     console.error("Add Crop Error:", error);
@@ -57,10 +57,12 @@ export const addCrop = async (req, res) => {
 };
 
 
-// Update crop (farmer only)
+
+// ✅ Update crop (SECURE VERSION)
 export const updateCrop = async (req, res) => {
   try {
     const { id } = req.params;
+
     const crop = await Crop.findById(id);
 
     if (!crop) {
@@ -68,22 +70,46 @@ export const updateCrop = async (req, res) => {
     }
 
     if (!crop.farmer.equals(req.user._id)) {
-      return res.status(403).json({ message: "You can only edit your own crops" });
+      return res.status(403).json({
+        message: "You can only edit your own crops"
+      });
     }
 
-    // 🔴 if new image is sent
+    // ✅ secure whitelist
+    const allowedFields = [
+      "name",
+      "category",
+      "description",
+      "quantity",
+      "unit",
+      "price",
+      "discount",
+      "expiryDate",
+      "organic",
+      "location"
+    ];
+
+    allowedFields.forEach(field => {
+      if (req.body[field] !== undefined) {
+        crop[field] = req.body[field];
+      }
+    });
+
+    // image upload
     if (req.file) {
       const cloudRes = await uploadOnCloudinary(req.file.path);
       if (!cloudRes) {
         return res.status(500).json({ message: "Image upload failed" });
       }
-      crop.images = [cloudRes.secure_url]; // replace old image
+      crop.images = [cloudRes.secure_url];
     }
 
-    Object.assign(crop, req.body);
     await crop.save();
 
-    res.status(200).json({ message: "Crop updated", crop });
+    res.status(200).json({
+      message: "Crop updated successfully",
+      crop
+    });
 
   } catch (error) {
     console.error("Update Crop Error:", error);
@@ -91,59 +117,144 @@ export const updateCrop = async (req, res) => {
   }
 };
 
-// Delete crop (farmer only)
+
+
+// ✅ Delete crop (FIXED deprecated remove)
 export const deleteCrop = async (req, res) => {
   try {
     const { id } = req.params;
+
     const crop = await Crop.findById(id);
 
-    if (!crop) return res.status(404).json({ message: "Crop not found" });
-    if (!crop.farmer.equals(req.user._id)) return res.status(403).json({ message: "You can only delete your own crops" });
+    if (!crop) {
+      return res.status(404).json({ message: "Crop not found" });
+    }
 
-    await crop.remove();
-    res.status(200).json({ message: "Crop deleted successfully" });
+    if (!crop.farmer.equals(req.user._id)) {
+      return res.status(403).json({
+        message: "You can only delete your own crops"
+      });
+    }
+
+    await crop.deleteOne();
+
+    res.status(200).json({
+      message: "Crop deleted successfully"
+    });
+
   } catch (error) {
     console.error("Delete Crop Error:", error);
     res.status(500).json({ message: "Server error while deleting crop" });
   }
 };
 
-// Get all crops of the logged-in farmer
+
+
+// ✅ Get all crops of logged-in farmer
 export const getMyCrops = async (req, res) => {
   try {
-    const crops = await Crop.find({ farmer: req.user._id });
+
+    const crops = await Crop.find({
+      farmer: req.user._id
+    }).lean(); // ⚡ performance boost
+
     res.status(200).json(crops);
+
   } catch (error) {
     console.error("Get My Crops Error:", error);
     res.status(500).json({ message: "Server error while fetching crops" });
   }
 };
 
+
+
 // ------------------ BUYER CONTROLLERS ------------------
 
-// Get all available crops (for buyers)
+
+// ✅ Get all available crops (REAL marketplace query)
 export const getAvailableCrops = async (req, res) => {
   try {
-    const crops = await Crop.find({ isAvailable: true })
-      .populate("farmer", "name location") // only name + location
-      .select("name category description images quantity unit price discount organic");
 
+    //---------------- PAGINATION ----------------
+    const page = Number(req.query.page) || 1;
+    const limit = 4; // perfect grid size
+    const skip = (page - 1) * limit;
+
+    const { search, category, organic, sort } = req.query;
+
+    let query = {
+      isAvailable: true,
+      $or: [
+        { expiryDate: { $exists: false } },
+        { expiryDate: { $gt: new Date() } }
+      ]
+    };
+
+    //---------------- SEARCH ----------------
+    if (search) {
+      query.name = {
+        $regex: search,
+        $options: "i"
+      };
+    }
+
+    //---------------- CATEGORY ----------------
+    if (category) {
+      query.category = category;
+    }
+
+    //---------------- ORGANIC ----------------
+    if (organic) {
+      query.organic = organic === "true";
+    }
+
+    //---------------- FETCH ----------------
+    let cropsQuery = Crop.find(query)
+      .populate("farmer", "name location")
+      .select("name category description images unit price discount organic availableStock");
+
+    //---------------- SORT ----------------
+    if (sort === "lowToHigh") {
+      cropsQuery = cropsQuery.sort({ price: 1 });
+    }
+
+    if (sort === "highToLow") {
+      cropsQuery = cropsQuery.sort({ price: -1 });
+    }
+
+    //---------------- COUNT (VERY IMPORTANT) ----------------
+    const totalCrops = await Crop.countDocuments(query);
+
+    //---------------- APPLY PAGINATION ----------------
+    const crops = await cropsQuery
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    //---------------- MAP ----------------
     const buyerCrops = crops.map(c => ({
       id: c._id,
       name: c.name,
       category: c.category,
       description: c.description,
       images: c.images,
-      quantityAvailable: c.quantity - c.sold,
+      quantityAvailable: c.availableStock,
       unit: c.unit,
       price: c.price,
       discount: c.discount,
-      farmerName: c.farmer.name,
-      location: c.farmer.location,
+      farmerName: c.farmer?.name,
+      location: c.farmer?.location,
       organic: c.organic
     }));
 
-    res.status(200).json(buyerCrops);
+    //---------------- RESPONSE ----------------
+    res.status(200).json({
+      crops: buyerCrops,
+      currentPage: page,
+      totalPages: Math.ceil(totalCrops / limit),
+      totalCrops
+    });
+
   } catch (error) {
     console.error("Get Available Crops Error:", error);
     res.status(500).json({ message: "Server error while fetching crops" });

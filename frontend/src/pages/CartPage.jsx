@@ -40,7 +40,7 @@ const CartPage = () => {
 
         {/* 🔥 Smart UX */}
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           className="
             mt-6
             bg-green-600

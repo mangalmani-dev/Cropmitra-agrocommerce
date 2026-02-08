@@ -4,57 +4,110 @@ const cropSchema = new mongoose.Schema({
   farmer: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "User", 
-    required: true 
+    required: true,
+    index: true
   },
+
   name: { 
     type: String, 
-    required: true 
+    required: true,
+    trim: true
   },
+
   category: { 
     type: String, 
-    required: true 
-  }, // e.g., Vegetable, Fruit, Grain
+    required: true,
+   enum: ["vegetable", "fruit", "grain", "pulse", "other"]
+  },
+
   description: { 
     type: String 
   },
+
   images: [{ 
     type: String 
-  }], // array of image URLs
+  }],
+
   quantity: { 
     type: Number, 
-    required: true 
+    required: true,
+    min: 0
   },
+
   unit: { 
     type: String, 
     required: true 
-  }, // e.g., Kg, Dozen, Liter
+  },
+
   price: { 
     type: Number, 
-    required: true 
+    required: true,
+    min: 0
   },
+
   discount: { 
     type: Number, 
-    default: 0 
-  }, // percentage discount
+    default: 0,
+    min: 0,
+    max: 100
+  },
+
   sold: { 
     type: Number, 
-    default: 0 
-  }, // quantity sold
+    default: 0,
+    min: 0
+  },
+
+  minOrderQty: {
+    type: Number,
+    default: 1,
+    min: 1
+  },
+
   isAvailable: { 
     type: Boolean, 
     default: true 
   },
+
   expiryDate: { 
     type: Date 
-  }, // optional
+  },
+
   organic: { 
     type: Boolean, 
     default: false 
   },
+
   location: { 
     type: String 
-  }, // optional
-}, { timestamps: true });
+  },
+
+}, { 
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
+
+
+// ✅ Virtual Available Stock
+cropSchema.virtual("availableStock").get(function () {
+  return this.quantity - this.sold;
+});
+
+
+// ✅ Auto update availability before saving
+cropSchema.pre("save", function (next) {
+  if (this.sold >= this.quantity) {
+    this.isAvailable = false;
+  } else {
+    this.isAvailable = true;
+  }
+  next();
+});
+
+
+// ✅ Index for faster filtering
+cropSchema.index({ category: 1 });
 
 const Crop = mongoose.model("Crop", cropSchema);
 

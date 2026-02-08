@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
-import { useCropStore } from "../store/cropStore";
+import { useCropMarketStore } from "../store/cropMarketStore";
 import { useCartStore } from "../store/cartStore";
 
 const Navbar = () => {
   const { user, logout } = useAuthStore();
-  const { search, setSearch } = useCropStore();
+  const { search, setSearch } = useCropMarketStore();
   const { cartCount } = useCartStore();
 
   if (!user) return null;
