@@ -34,6 +34,16 @@ const Profile = () => {
             {[
               { title: "My Orders", icon: "📦", path: "/orders" },
               { title: "Addresses", icon: "📍", path: "/addresses" },
+
+              // ✅ Farmer Only Cards
+              ...(user?.role === "Farmer"
+                ? [
+                    { title: "Farmer Orders", icon: "🚜", path: "/farmer/orders" },
+                    { title: "Add Crop", icon: "🌾", path: "/farmer/add-crop" },
+                    { title: "My Crops", icon: "🌱", path: "/farmer/my-crops" },
+                  ]
+                : []),
+
             ].map((card) => (
               <div
                 key={card.title}

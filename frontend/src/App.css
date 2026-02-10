@@ -1,5 +1,12 @@
 @import "tailwindcss";
-@plugin "daisyui";
+
+/* ⭐ THIS LINE ENABLES dark: classes */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* DaisyUI Themes */
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
 
 
 /* Hover underline */

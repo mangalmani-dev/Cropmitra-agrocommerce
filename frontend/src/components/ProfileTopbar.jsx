@@ -1,9 +1,12 @@
 import { useAuthStore } from "../store/authStore";
 import { useRef, useState, useEffect } from "react";
 import FarmerApplyForm from "./FarmerApplyForm";
+import { useNavigate } from "react-router-dom";
 
 const ProfileTopBar = () => {
   const { user, loading, uploadProfileImage } = useAuthStore();
+
+  const navigate = useNavigate();
 
   const fileRef = useRef(null);
   const menuRef = useRef(null);
@@ -11,6 +14,13 @@ const ProfileTopBar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [showFarmerForm, setShowFarmerForm] = useState(false);
+
+  //////////////////////////////////////////
+  // ✅ NORMALIZE ROLE (VERY IMPORTANT)
+  //////////////////////////////////////////
+
+  const role = user?.role?.toLowerCase();
+  const isFarmer = role === "farmer";
 
   //////////////////////////////////////////
   // Close dropdown on outside click
@@ -163,14 +173,35 @@ const ProfileTopBar = () => {
                   capitalize
                 "
               >
-                {user?.role}
+                {role}
               </span>
             </div>
           </div>
 
           {/* RIGHT SIDE */}
-          <div>
-            {user.role !== "farmer" ? (
+          <div className="flex items-center gap-4">
+
+            {/* ⭐ QUICK ACTION FOR FARMERS */}
+            {isFarmer && (
+              <button
+                onClick={() => navigate("/farmer/add-crop")}
+                className="
+                  bg-green-600
+                  hover:bg-green-700
+                  text-white
+                  px-6 py-2.5
+                  rounded-xl
+                  font-semibold
+                  shadow-md
+                  transition
+                "
+              >
+                + Add Crop
+              </button>
+            )}
+
+            {/* BECOME FARMER BUTTON */}
+            {!isFarmer ? (
               <button
                 type="button"
                 onClick={() => setShowFarmerForm(true)}

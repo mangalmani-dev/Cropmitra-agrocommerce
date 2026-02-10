@@ -20,6 +20,7 @@ import Profile from "./pages/Profile";
 import OrdersPage from "./pages/OrdersPage";
 import AddCrop from "./pages/AddCrop";
 import MyCrops from "./pages/MyCrops";
+import FarmerOrders from "./pages/FarmerOrders"; // ⭐ NEW
 
 // Admin
 import AdminLayout from "./components/AdminLayout";
@@ -38,7 +39,7 @@ import Addresses from "./pages/Addresses";
 import Checkout from "./pages/Checkout";
 
 //////////////////////////////////////////////////////
-// ⭐ INNER COMPONENT (Senior Pattern)
+// ⭐ INNER COMPONENT
 //////////////////////////////////////////////////////
 
 function AppContent() {
@@ -60,7 +61,7 @@ function AppContent() {
   const hideNavbarRoutes = [
     "/profile",
     "/admin",
-      
+    "/farmer", // ⭐ hide navbar for farmer panel
   ];
 
   const shouldHideNavbar = hideNavbarRoutes.some((route) =>
@@ -71,10 +72,8 @@ function AppContent() {
 
   return (
     <>
-      {/* ✅ NAVBAR */}
       {!shouldHideNavbar && <DashboardNavbar />}
 
-      {/* ✅ TOASTER */}
       <Toaster
         position="top-center"
         toastOptions={{
@@ -85,24 +84,50 @@ function AppContent() {
         }}
       />
 
-      {/* ✅ CART MODAL */}
       <CartModal />
 
-      {/* ✅ ROUTES */}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/cart" element={<CartPage />} />
+
+        {/* USER */}
         <Route path="/profile" element={<Profile />} />
         <Route path="/orders" element={<OrdersPage />} />
-        <Route path="/add-crop" element={<AddCrop />} />
-        <Route path="/my-crops" element={<MyCrops />} />
         <Route path="/addresses" element={<Addresses />} />
-          <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout" element={<Checkout />} />
 
-        {/* ✅ ADMIN PROTECTED ROUTES */}
+        {/* FARMER PROTECTED */}
+        <Route
+          path="/farmer/orders"
+          element={
+            <ProtectedRoute role="Farmer">
+              <FarmerOrders />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/farmer/add-crop"
+          element={
+            <ProtectedRoute role="Farmer">
+              <AddCrop />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/farmer/my-crops"
+          element={
+            <ProtectedRoute role="Farmer">
+              <MyCrops />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ADMIN */}
         <Route
           path="/admin"
           element={
@@ -115,8 +140,6 @@ function AppContent() {
           <Route path="users" element={<AdminUsers />} />
           <Route path="farmers" element={<AdminFarmers />} />
           <Route path="orders" element={<AdminOrders />} />
-        
-
         </Route>
       </Routes>
     </>
