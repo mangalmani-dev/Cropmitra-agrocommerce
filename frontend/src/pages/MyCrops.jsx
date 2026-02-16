@@ -55,7 +55,7 @@ const MyCrops = () => {
             </div>
 
             {/* ADD CROP BUTTON */}
-            <button
+            {/* <button
               onClick={() => navigate("/farmer/add-crop")}
               className="
                 bg-green-600 hover:bg-green-700
@@ -66,7 +66,7 @@ const MyCrops = () => {
               "
             >
               + Add Crop
-            </button>
+            </button> */}
 
           </div>
 

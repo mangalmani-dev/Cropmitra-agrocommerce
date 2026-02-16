@@ -11,24 +11,6 @@ const Navbar = () => {
 
   if (!user) return null;
 
-  //----------------------------------
-  // DARK MODE TOGGLE
-  //----------------------------------
-
-  const toggleTheme = () => {
-    const html = document.documentElement;
-
-    html.classList.toggle("dark");
-
-    if (html.classList.contains("dark")) {
-      localStorage.setItem("theme", "dark");
-    } else {
-      localStorage.setItem("theme", "light");
-    }
-  };
-
-  //----------------------------------
-
   return (
     <header
       className="
@@ -51,7 +33,7 @@ const Navbar = () => {
           Crop<span className="text-black dark:text-white">Mitra</span>
         </Link>
 
-        {/* 🔍 Search */}
+        {/* Search */}
         <div className="hidden md:flex flex-1 mx-6">
           <input
             type="text"
@@ -117,21 +99,6 @@ const Navbar = () => {
             "
           >
             Logout
-          </button>
-
-          {/* 🌙 Dark Mode Button */}
-          <button
-            onClick={toggleTheme}
-            className="
-              px-3 py-1.5
-              rounded-lg
-              bg-gray-200
-              dark:bg-gray-700
-              hover:scale-105
-              transition
-            "
-          >
-            🌙
           </button>
 
         </div>

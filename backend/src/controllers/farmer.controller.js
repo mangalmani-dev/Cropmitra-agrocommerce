@@ -49,27 +49,49 @@ export const getFarmerRequests = async (req, res) => {
 };
 
 // ================= APPROVE FARMER (ADMIN) =================
+
+
+
 export const approveFarmer = async (req, res) => {
-  const { id } = req.params; // farmer profile ID
+
+  console.log("✅ APPROVE CONTROLLER HIT");
 
   try {
-    const farmerProfile = await FarmerProfile.findById(id);
-    if (!farmerProfile) {
-      return res.status(404).json({ message: "Farmer profile not found." });
-    }
+
+    const farmerProfile = await FarmerProfile.findById(req.params.id);
+
+    console.log("Farmer Profile:", farmerProfile);
+
+    const user = await User.findById(farmerProfile.user);
+
+    console.log("USER FOUND:", user);
+
+    // 🔥 FORCE UPDATE
+    user.role = "farmer";
+
+    await user.save();
+
+    console.log("UPDATED USER:", user);
 
     farmerProfile.isApproved = true;
     await farmerProfile.save();
 
-    // Update User role to "farmer"
-    await User.findByIdAndUpdate(farmerProfile.user, { role: "Farmer",  isFarmerApproved: true  });
+    res.status(200).json({
+      message:"approved"
+    });
 
-    res.status(200).json({ message: "Farmer approved successfully.", farmerProfile });
   } catch (error) {
-    console.error("Approve Farmer Error:", error);
-    res.status(500).json({ message: "Server error while approving farmer." });
+
+    console.log("ERROR:", error);
+
+    res.status(500).json({
+      message:"error"
+    });
   }
 };
+
+
+
 
 // ================= GET FARMER PROFILE (LOGGED-IN USER) =================
 export const getMyFarmerProfile = async (req, res) => {

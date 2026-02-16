@@ -44,7 +44,8 @@ export const addToCart = async (req, res) => {
 // GET MY CART
 export const getMyCart = async (req, res) => {
   const cart = await Cart.findOne({ user: req.user._id })
-    .populate("items.crop", "name price unit");
+.populate("items.crop", "name price unit images");
+
 
   if (!cart) {
     return res.status(200).json({ items: [] });

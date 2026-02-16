@@ -44,7 +44,7 @@ const Login = () => {
         navigate("/admin/dashboard");
       } 
       else if (user.role === "farmer") {
-        navigate("/my-crops"); // farmer panel
+        navigate("/home"); // farmer panel
       } 
       else {
         navigate("/home"); // normal user

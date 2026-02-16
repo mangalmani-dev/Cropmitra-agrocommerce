@@ -103,7 +103,7 @@ function AppContent() {
         <Route
           path="/farmer/orders"
           element={
-            <ProtectedRoute role="Farmer">
+            <ProtectedRoute role="farmer">
               <FarmerOrders />
             </ProtectedRoute>
           }
@@ -112,7 +112,7 @@ function AppContent() {
         <Route
           path="/farmer/add-crop"
           element={
-            <ProtectedRoute role="Farmer">
+            <ProtectedRoute role="farmer">
               <AddCrop />
             </ProtectedRoute>
           }
@@ -121,7 +121,7 @@ function AppContent() {
         <Route
           path="/farmer/my-crops"
           element={
-            <ProtectedRoute role="Farmer">
+            <ProtectedRoute role="farmer">
               <MyCrops />
             </ProtectedRoute>
           }

@@ -73,7 +73,7 @@ export const useFarmerStore = create((set) => ({
   approveFarmer: async (farmerId) => {
     set({ loading: true });
     try {
-      await axiosInstance.patch(`/farmer/approve/${farmerId}`);
+   await axiosInstance.patch(`/farmer/approve/${farmerId}`);
 
       toast.success("Farmer approved successfully ✅");
 

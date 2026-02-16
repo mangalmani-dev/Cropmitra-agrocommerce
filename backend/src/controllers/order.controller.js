@@ -68,7 +68,7 @@ export const getFarmerOrders = async (req, res) => {
     .populate("buyer", "name email")
     .populate("items.crop", "name");
 
-  res.status(200).json(orders);
+  res.status(200).json({orders});
 };
 
 // UPDATE ORDER STATUS (Farmer)

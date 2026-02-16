@@ -157,8 +157,11 @@ export const getMyCrops = async (req, res) => {
     const crops = await Crop.find({
       farmer: req.user._id
     }).lean(); // ⚡ performance boost
+         
+
 
     res.status(200).json(crops);
+    
 
   } catch (error) {
     console.error("Get My Crops Error:", error);

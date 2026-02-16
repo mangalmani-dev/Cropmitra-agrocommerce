@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState  } from "react";
 import { useFarmerCropStore } from "../store/farmerCropStore";
+import { useNavigate } from "react-router-dom";
 
 const CATEGORY_OPTIONS = [
   "fruit",
@@ -10,6 +11,8 @@ const CATEGORY_OPTIONS = [
 ];
 
 const AddCrop = () => {
+  
+const navigate = useNavigate();
 
   const { addCrop, addLoading } = useFarmerCropStore();
 
@@ -39,32 +42,31 @@ const AddCrop = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const data = new FormData();
+  const data = new FormData();
 
-    Object.entries(form).forEach(([key, value]) => {
-
-      // convert numbers properly
-      if (["quantity", "price", "discount"].includes(key)) {
-        data.append(key, Number(value));
-      } else {
-        data.append(key, value);
-      }
-
-    });
-
-    if (image) {
-      data.append("image", image);
+  Object.entries(form).forEach(([key, value]) => {
+    if (["quantity", "price", "discount"].includes(key)) {
+      data.append(key, Number(value));
+    } else {
+      data.append(key, value);
     }
+  });
 
-    const success = await addCrop(data);
+  if (image) {
+    data.append("image", image);
+  }
 
-    if(success){
-      setForm(initialState);
-      setImage(null);
-    }
-  };
+  const success = await addCrop(data);
+
+  if (success) {
+    setForm(initialState);
+    setImage(null);
+
+    navigate("/home"); // ✅ REDIRECT
+  }
+};
 
   return (
     <div className="min-h-screen bg-green-50 flex justify-center items-center p-6">

@@ -43,6 +43,8 @@ const Crops = () => {
               alt={crop.name}
               className="h-48 w-full object-cover"
             />
+         
+
             <div className="p-4">
               <h2 className="text-xl font-bold text-green-700">{crop.name}</h2>
               <p className="text-gray-600 mt-1">Farmer: {crop.farmerName}</p>

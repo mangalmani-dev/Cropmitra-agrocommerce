@@ -36,7 +36,7 @@ const Profile = () => {
               { title: "Addresses", icon: "📍", path: "/addresses" },
 
               // ✅ Farmer Only Cards
-              ...(user?.role === "Farmer"
+              ...(user?.role === "farmer"
                 ? [
                     { title: "Farmer Orders", icon: "🚜", path: "/farmer/orders" },
                     { title: "Add Crop", icon: "🌾", path: "/farmer/add-crop" },
