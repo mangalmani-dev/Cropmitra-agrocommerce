@@ -4,9 +4,9 @@ import Order from "../models/order.model.js";
 import FarmerProfile from "../models/farmer.model.js";
 
 
-// ======================================
+
 // ✅ ADMIN DASHBOARD
-// ======================================
+
 
 export const getDashboard = async (req, res) => {
   try {
@@ -57,9 +57,9 @@ export const getDashboard = async (req, res) => {
 
 
 
-// ======================================
+
 // ✅ GET PENDING FARMERS
-// ======================================
+
 export const getPendingFarmers = async (req, res) => {
   try {
 
@@ -87,46 +87,58 @@ export const getPendingFarmers = async (req, res) => {
 
 
 
-// ======================================
+
 // ✅ APPROVE FARMER
-// ======================================
+
+
+
 export const approveFarmer = async (req, res) => {
-
   try {
-
     const farmer = await FarmerProfile.findById(req.params.id);
 
-    if(!farmer){
+    if (!farmer) {
       return res.status(404).json({
-        success:false,
-        message:"Farmer not found"
+        success: false,
+        message: "Farmer not found"
       });
     }
 
+    // 1️⃣ Approve Farmer Profile
     farmer.isApproved = true;
     await farmer.save();
 
+    // 2️⃣ Update User Role + Approval
+    const user = await User.findById(farmer.user);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    user.role = "farmer";
+    user.isFarmerApproved = true;
+    await user.save();
+
     res.status(200).json({
-      success:true,
-      message:"Farmer approved"
+      success: true,
+      message: "Farmer approved successfully"
     });
 
   } catch (error) {
-
     console.error(error);
-
     res.status(500).json({
-      success:false,
-      message:"Approval failed"
+      success: false,
+      message: "Approval failed"
     });
   }
 };
 
 
 
-// ======================================
 // ✅ REJECT FARMER
-// ======================================
+
 
 export const rejectFarmer = async (req, res) => {
 
@@ -150,9 +162,9 @@ export const rejectFarmer = async (req, res) => {
 
 
 
-// ======================================
+
 // ✅ BLOCK USER
-// ======================================
+
 
 export const blockUser = async (req, res) => {
 
@@ -186,9 +198,9 @@ export const blockUser = async (req, res) => {
 
 
 
-// ======================================
+
 // ✅ UNBLOCK USER
-// ======================================
+
 
 export const unblockUser = async (req, res) => {
 
@@ -222,9 +234,9 @@ export const unblockUser = async (req, res) => {
 
 
 
-// ======================================
+
 // ✅ GET ALL USERS
-// ======================================
+
 
 export const getAllUsers = async (req, res) => {
 
@@ -260,9 +272,9 @@ export const getAllUsers = async (req, res) => {
 
 
 
-// ======================================
+
 // ✅ GET ALL FARMERS
-// ======================================
+
 
 export const getAllFarmers = async (req, res) => {
 

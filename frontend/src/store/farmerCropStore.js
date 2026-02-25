@@ -55,12 +55,14 @@ export const useFarmerCropStore = create((set, get) => ({
       return true;
 
     } catch (err) {
+  console.log("FULL ERROR:", err);
+  console.log("RESPONSE:", err.response);
 
-      toast.error(
-        err.response?.data?.message || "Failed to add crop"
-      );
+  toast.error(
+    err.response?.data?.message || "Failed to add crop"
+  );
 
-      return false;
+  return false;
 
     } finally {
       set({ addLoading: false });

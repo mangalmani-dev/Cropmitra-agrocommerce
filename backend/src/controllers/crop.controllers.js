@@ -174,19 +174,27 @@ export const getMyCrops = async (req, res) => {
 // ------------------ BUYER CONTROLLERS ------------------
 
 
-// ✅ Get all available crops (REAL marketplace query)
 export const getAvailableCrops = async (req, res) => {
   try {
 
     //---------------- PAGINATION ----------------
     const page = Number(req.query.page) || 1;
-    const limit = 4; // perfect grid size
+    const limit = 8;   // 👈 Show 8 crops per page
     const skip = (page - 1) * limit;
 
     const { search, category, organic, sort } = req.query;
 
+    //---------------- BASE QUERY ----------------
     let query = {
-      isAvailable: true,
+      // ✅ STOCK CHECK (MOST IMPORTANT FIX)
+      $expr: {
+        $gt: [
+          { $subtract: ["$quantity", "$sold"] },
+          0
+        ]
+      },
+
+      // ✅ NOT EXPIRED
       $or: [
         { expiryDate: { $exists: false } },
         { expiryDate: { $gt: new Date() } }
@@ -202,19 +210,19 @@ export const getAvailableCrops = async (req, res) => {
     }
 
     //---------------- CATEGORY ----------------
-    if (category) {
+    if (category && category !== "all") {
       query.category = category;
     }
 
     //---------------- ORGANIC ----------------
-    if (organic) {
+    if (organic && organic !== "all") {
       query.organic = organic === "true";
     }
 
     //---------------- FETCH ----------------
     let cropsQuery = Crop.find(query)
       .populate("farmer", "name location")
-      .select("name category description images unit price discount organic availableStock");
+      .select("name category description images unit price discount organic quantity sold");
 
     //---------------- SORT ----------------
     if (sort === "lowToHigh") {
@@ -225,7 +233,7 @@ export const getAvailableCrops = async (req, res) => {
       cropsQuery = cropsQuery.sort({ price: -1 });
     }
 
-    //---------------- COUNT (VERY IMPORTANT) ----------------
+    //---------------- COUNT ----------------
     const totalCrops = await Crop.countDocuments(query);
 
     //---------------- APPLY PAGINATION ----------------
@@ -236,12 +244,15 @@ export const getAvailableCrops = async (req, res) => {
 
     //---------------- MAP ----------------
     const buyerCrops = crops.map(c => ({
-      id: c._id,
+      id: c._id.toString(), // ✅ React safe
       name: c.name,
       category: c.category,
       description: c.description,
       images: c.images,
-      quantityAvailable: c.availableStock,
+
+      // ✅ calculate dynamically
+      quantityAvailable: c.quantity - c.sold,
+
       unit: c.unit,
       price: c.price,
       discount: c.discount,
@@ -253,7 +264,7 @@ export const getAvailableCrops = async (req, res) => {
     //---------------- RESPONSE ----------------
     res.status(200).json({
       crops: buyerCrops,
-      currentPage: page,
+      page, // ✅ matches Zustand
       totalPages: Math.ceil(totalCrops / limit),
       totalCrops
     });

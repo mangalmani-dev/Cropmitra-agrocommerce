@@ -17,9 +17,10 @@ const Home = () => {
 
   const { addToCart } = useCartStore();
 
-  useEffect(() => {
-    fetchCrops();
-  }, []);
+useEffect(() => {
+  setPage(1);
+}, []);
+
 
   return (
     <div className="min-h-screen bg-base-200 text-base-content">
