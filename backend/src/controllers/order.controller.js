@@ -191,17 +191,41 @@ export const updateOrderStatus = async (req, res) => {
 };
     // farmer earning
 export const getFarmerEarnings = async (req, res) => {
-  const farmerProfile = await FarmerProfile.findOne({ user: req.user._id })
-    .populate("earningsHistory.order", "totalAmount status createdAt");
+  try {
+    const orders = await Order.find({
+      "items.farmer": req.user._id,
+      status: "DELIVERED",
+    });
 
-  if (!farmerProfile) {
-    return res.status(404).json({ message: "Farmer profile not found" });
+    let totalEarnings = 0;
+    const earningsHistory = [];
+
+    for (const order of orders) {
+      for (const item of order.items) {
+        if (item.farmer.toString() === req.user._id.toString()) {
+          const amount = item.quantity * item.price;
+
+          totalEarnings += amount;
+
+          earningsHistory.push({
+            order: order._id,
+            amount,
+            createdAt: order.createdAt,
+            status: order.status,
+          });
+        }
+      }
+    }
+
+    res.status(200).json({
+      totalEarnings,
+      earningsHistory,
+    });
+
+  } catch (error) {
+    console.error("Earnings Error:", error);
+    res.status(500).json({ message: "Server error" });
   }
-
-  res.status(200).json({
-    totalEarnings: farmerProfile.totalEarnings,
-    earningsHistory: farmerProfile.earningsHistory
-  });
 };
   // order controllers for location
 export const getOrderById = async (req, res) => {

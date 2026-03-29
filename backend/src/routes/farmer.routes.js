@@ -2,13 +2,14 @@ import express from "express";
 import {
   applyFarmer,
   getFarmerRequests,
-  approveFarmer,
-  getMyFarmerProfile
+  approveFarmer,  getMyFarmerProfile,
 } from "../controllers/farmer.controller.js";
 
 import { adminOnly } from "../middleware/admin.js";
 import { protect } from "../middleware/authMiddleware.js";
 import { getFarmerEarnings } from "../controllers/order.controller.js";
+
+import { farmerOnly } from "../middleware/farmer.js";
 
 const router = express.Router();
 
@@ -24,7 +25,8 @@ router.patch("/approve/:id", protect, adminOnly, approveFarmer);
 
  // Earning 
 
- router.get("/earnings", protect, getFarmerEarnings);
+ router.get("/earnings",protect, getFarmerEarnings);
+
 
 
 
