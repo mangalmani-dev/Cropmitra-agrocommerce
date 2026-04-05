@@ -248,6 +248,10 @@
     "myCrops": {
       "title": "My Crops",
       "desc": "View and manage your crops"
+    },
+        "earnings": {
+      "title": "Earnings",
+      "desc": "Track your income and performance"
     }
   }
 },
@@ -294,6 +298,49 @@
   "grain": "Grain",
   "pulse": "Pulse",
   "other": "Other"
-}
+},
 
+"earningsPage": {
+  "title": "Farmer Earnings",
+  "subtitle": "Track your income and order performance",
+
+  "totalEarnings": "Total Earnings",
+  "totalOrders": "Total Orders",
+
+  "historyTitle": "Earnings History",
+
+  "table": {
+    "date": "Date",
+    "amount": "Amount",
+    "status": "Status"
+  },
+
+  "empty": "No earnings yet 🚜",
+  "loading": "Loading earnings..."
+},
+
+"farmerOrdersPage": {
+  "loading": "Loading orders...",
+  "empty": "No orders yet 📦",
+  "title": "Farmer Orders 🚜",
+  "stats": {
+    "total": "Total Orders",
+    "placed": "Placed",
+    "confirmed": "Confirmed",
+    "delivered": "Delivered"
+  },
+  "buyer": "Buyer",
+  "actions": {
+    "confirm": "Confirm",
+    "ship": "Ship",
+    "deliver": "Deliver"
+  }
+},
+"orderStatus": {
+  "PLACED": "Placed",
+  "CONFIRMED": "Confirmed",
+  "SHIPPED": "Shipped",
+  "DELIVERED": "Delivered",
+  "CANCELLED": "Cancelled"
+}
 }

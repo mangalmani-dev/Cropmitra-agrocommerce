@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useFarmerOrderStore } from "../store/farmerOrderStore";
 import ProfileTopBar from "../components/ProfileTopbar";
+import { useTranslation } from "react-i18next";
 
 const FarmerOrders = () => {
   const {
@@ -9,6 +10,8 @@ const FarmerOrders = () => {
     fetchFarmerOrders,
     updateStatus,
   } = useFarmerOrderStore();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchFarmerOrders();
@@ -19,7 +22,7 @@ const FarmerOrders = () => {
   if (loading) {
     return (
       <div className="flex justify-center mt-40 text-xl font-semibold">
-        Loading orders...
+        {t("farmerOrdersPage.loading")}
       </div>
     );
   }
@@ -29,7 +32,7 @@ const FarmerOrders = () => {
   if (!orders?.length) {
     return (
       <div className="flex justify-center mt-40 text-gray-500 text-xl">
-        No orders yet 📦
+        {t("farmerOrdersPage.empty")}
       </div>
     );
   }
@@ -43,66 +46,44 @@ const FarmerOrders = () => {
 
       <div className="max-w-7xl mx-auto p-10">
 
-        {/* 🔥 PREMIUM HEADER */}
-        <h1 className="
-          text-5xl
-          font-bold
-          mb-12
-          bg-gradient-to-r
-          from-green-700
-          to-emerald-500
-          bg-clip-text
-          text-transparent
-        ">
-          Farmer Orders 🚜
+        {/* HEADER */}
+        <h1 className="text-5xl font-bold mb-12 bg-gradient-to-r from-green-700 to-emerald-500 bg-clip-text text-transparent">
+          {t("farmerOrdersPage.title")}
         </h1>
 
-        {/* 🔥 DASHBOARD STATS */}
+        {/* STATS */}
         <div className="grid grid-cols-4 gap-8 mb-14">
 
-          <StatCard title="Total Orders" value={orders.length} />
+          <StatCard title={t("farmerOrdersPage.stats.total")} value={orders.length} />
 
           <StatCard
-            title="Placed"
+            title={t("farmerOrdersPage.stats.placed")}
             value={orders.filter(o => o.status === "PLACED").length}
           />
 
           <StatCard
-            title="Confirmed"
+            title={t("farmerOrdersPage.stats.confirmed")}
             value={orders.filter(o => o.status === "CONFIRMED").length}
           />
 
           <StatCard
-            title="Delivered"
+            title={t("farmerOrdersPage.stats.delivered")}
             value={orders.filter(o => o.status === "DELIVERED").length}
           />
 
         </div>
 
-        {/* 🔥 ORDERS */}
+        {/* ORDERS */}
         <div className="space-y-8">
           {orders.map((order) => (
 
             <div
               key={order._id}
-              className="
-                relative
-                bg-white/80
-                backdrop-blur-md
-                border border-gray-200
-                p-7
-                rounded-3xl
-                shadow-md
-                hover:shadow-2xl
-                transition
-                hover:-translate-y-1
-              "
+              className="relative bg-white/80 backdrop-blur-md border border-gray-200 p-7 rounded-3xl shadow-md hover:shadow-2xl transition hover:-translate-y-1"
             >
 
-              {/* GREEN ACCENT */}
               <div className="absolute left-0 top-0 h-full w-2 bg-green-500 rounded-l-3xl"/>
 
-              {/* TOP */}
               <div className="flex justify-between items-start">
 
                 <div>
@@ -111,7 +92,7 @@ const FarmerOrders = () => {
                   </p>
 
                   <p className="text-gray-500">
-                    Buyer: {order.buyer?.name}
+                    {t("farmerOrdersPage.buyer")}: {order.buyer?.name}
                   </p>
 
                   <p className="text-gray-400 text-sm mt-1">
@@ -131,7 +112,6 @@ const FarmerOrders = () => {
 
               <hr className="my-5"/>
 
-              {/* ITEMS */}
               <div className="space-y-1">
                 {order.items.map((item) => (
                   <p key={item._id} className="text-gray-700">
@@ -140,36 +120,29 @@ const FarmerOrders = () => {
                 ))}
               </div>
 
-              {/* ACTIONS */}
               <div className="flex justify-end gap-4 mt-6">
 
                 {order.status === "PLACED" && (
                   <ActionButton
-                    label="Confirm"
+                    label={t("farmerOrdersPage.actions.confirm")}
                     color="bg-green-600 hover:bg-green-700"
-                    onClick={() =>
-                      updateStatus(order._id, "CONFIRMED")
-                    }
+                    onClick={() => updateStatus(order._id, "CONFIRMED")}
                   />
                 )}
 
                 {order.status === "CONFIRMED" && (
                   <ActionButton
-                    label="Ship"
+                    label={t("farmerOrdersPage.actions.ship")}
                     color="bg-blue-600 hover:bg-blue-700"
-                    onClick={() =>
-                      updateStatus(order._id, "SHIPPED")
-                    }
+                    onClick={() => updateStatus(order._id, "SHIPPED")}
                   />
                 )}
 
                 {order.status === "SHIPPED" && (
                   <ActionButton
-                    label="Deliver"
+                    label={t("farmerOrdersPage.actions.deliver")}
                     color="bg-purple-600 hover:bg-purple-700"
-                    onClick={() =>
-                      updateStatus(order._id, "DELIVERED")
-                    }
+                    onClick={() => updateStatus(order._id, "DELIVERED")}
                   />
                 )}
 
@@ -186,39 +159,17 @@ const FarmerOrders = () => {
 
 export default FarmerOrders;
 
-
-
-// ⭐ PREMIUM STAT CARD
-
+// STAT CARD
 const StatCard = ({ title, value }) => (
-  <div
-    className="
-      bg-white/70
-      backdrop-blur-lg
-      border border-white/40
-      p-6
-      rounded-3xl
-      shadow-md
-      hover:shadow-xl
-      transition
-      hover:-translate-y-1
-    "
-  >
-    <p className="text-gray-500 text-sm mb-1">
-      {title}
-    </p>
-
-    <h2 className="text-3xl font-bold text-gray-800">
-      {value}
-    </h2>
+  <div className="bg-white/70 backdrop-blur-lg border border-white/40 p-6 rounded-3xl shadow-md hover:shadow-xl transition hover:-translate-y-1">
+    <p className="text-gray-500 text-sm mb-1">{title}</p>
+    <h2 className="text-3xl font-bold text-gray-800">{value}</h2>
   </div>
 );
 
-
-
-// ⭐ PREMIUM STATUS BADGE
-
+// STATUS BADGE
 const StatusBadge = ({ status }) => {
+  const { t } = useTranslation();
 
   const styles = {
     PLACED: "bg-yellow-100 text-yellow-700",
@@ -229,42 +180,17 @@ const StatusBadge = ({ status }) => {
   };
 
   return (
-    <span
-      className={`
-        ${styles[status]}
-        px-4 py-1.5
-        rounded-full
-        text-xs
-        font-bold
-        tracking-wide
-        inline-block
-        mt-2
-      `}
-    >
-      {status}
+    <span className={`${styles[status]} px-4 py-1.5 rounded-full text-xs font-bold mt-2 inline-block`}>
+      {t(`orderStatus.${status}`)}
     </span>
   );
 };
 
-
-
-// ⭐ PREMIUM BUTTON
-
+// BUTTON
 const ActionButton = ({ label, color, onClick }) => (
   <button
     onClick={onClick}
-    className={`
-      ${color}
-      text-white
-      px-5
-      py-2.5
-      rounded-xl
-      font-semibold
-      shadow-md
-      hover:shadow-lg
-      transition
-      hover:scale-105
-    `}
+    className={`${color} text-white px-5 py-2.5 rounded-xl font-semibold shadow-md hover:shadow-lg transition hover:scale-105`}
   >
     {label}
   </button>

@@ -34,6 +34,8 @@ const Profile = () => {
           { title: "farmerOrders", icon: "🚜", path: "/farmer/orders" },
           { title: "addCrop", icon: "🌾", path: "/farmer/add-crop" },
           { title: "myCrops", icon: "🌱", path: "/farmer/my-crops" },
+           { title: "cropRecommendation", icon: "🧠", path: "/crop-recommendation" },
+           { title: "earnings", icon: "💰", path: "/farmer/earnings" },
         ]
       : []),
   ];

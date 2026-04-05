@@ -16,6 +16,9 @@ import DeliveryTest from "./pages/DeliveryTest";
 
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import FarmerEarnings from "./pages/FarmerEarnings";
+import CropRecommendation from "./pages/CropRecommendation";
+
 
 
 // Pages
@@ -118,10 +121,31 @@ function AppContent() {
           path="/farmer/orders"
           element={
             <ProtectedRoute role="farmer">
-              <FarmerOrders />
+              <FarmerOrders />  
+                 
             </ProtectedRoute>
           }
         />
+
+        <Route
+  path="/crop-recommendation"
+  element={
+    <ProtectedRoute role="farmer">
+      <CropRecommendation />
+    </ProtectedRoute>
+  }
+/>
+     
+                     
+
+        <Route
+  path="/farmer/earnings"
+  element={
+    <ProtectedRoute role="farmer">
+      <FarmerEarnings />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/farmer/add-crop"
