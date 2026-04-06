@@ -342,5 +342,26 @@
   "SHIPPED": "Shipped",
   "DELIVERED": "Delivered",
   "CANCELLED": "Cancelled"
-}
+},
+  "cropRecommendation": {
+    "title": "Crop Recommendation 🌱",
+    "subtitle": "AI-powered crop suggestions for your farm",
+    "analysisStatus": "🌱 Analysing soil & climate",
+
+    "stats": {
+      "totalRecommendations": "Total Recommendations",
+      "averageScore": "Average Score",
+      "estimatedProfit": "Est. Total Profit"
+    },
+
+    "searchPlaceholder": "Search crop or district...",
+
+    "labels": {
+      "soil": "Soil",
+      "season": "Season",
+      "water": "Water",
+      "yield": "Yield",
+      "profit": "Profit"
+    }
+  }
 }

@@ -336,5 +336,29 @@
   "SHIPPED": "पाठवले",
   "DELIVERED": "डिलीव्हर",
   "CANCELLED": "रद्द"
-}
+},
+
+  "cropRecommendation": {
+    "title": "पीक शिफारस 🌱",
+    "subtitle": "तुमच्या शेतासाठी AI आधारित पीक सूचना",
+    "analysisStatus": "🌱 माती आणि हवामान विश्लेषण सुरू आहे",
+
+    "stats": {
+      "totalRecommendations": "एकूण शिफारसी",
+      "averageScore": "सरासरी गुण",
+      "estimatedProfit": "अंदाजित एकूण नफा"
+    },
+
+    "searchPlaceholder": "पीक किंवा जिल्हा शोधा...",
+
+    "labels": {
+      "soil": "माती",
+      "season": "हंगाम",
+      "water": "पाणी",
+      "yield": "उत्पादन",
+      "profit": "नफा"
+    }
+  }
+
+
 }

@@ -328,6 +328,29 @@
   "SHIPPED": "भेजा गया",
   "DELIVERED": "डिलीवर",
   "CANCELLED": "रद्द"
-}
+},
+
+  "cropRecommendation": {
+    "title": "फसल अनुशंसा 🌱",
+    "subtitle": "आपके खेत के लिए AI आधारित फसल सुझाव",
+    "analysisStatus": "🌱 मिट्टी और जलवायु का विश्लेषण हो रहा है",
+
+    "stats": {
+      "totalRecommendations": "कुल अनुशंसाएँ",
+      "averageScore": "औसत स्कोर",
+      "estimatedProfit": "अनुमानित कुल लाभ"
+    },
+
+    "searchPlaceholder": "फसल या जिला खोजें...",
+
+    "labels": {
+      "soil": "मिट्टी",
+      "season": "मौसम",
+      "water": "पानी",
+      "yield": "उपज",
+      "profit": "लाभ"
+    }
+  }
+
 
 }
