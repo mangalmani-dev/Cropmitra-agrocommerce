@@ -23,7 +23,7 @@ import CropRecommendation from "./pages/CropRecommendation";
 
 // Pages
 // fix landing page import case
-import LandingPage from "./pages/LandingPage";
+import LandingPage from "./pages/HomeLanding.jsx";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
