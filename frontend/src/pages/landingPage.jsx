@@ -6,10 +6,12 @@ import Hero from '../components/Hero';       // Assuming you placed hero in 'com
 import Features from '../components/Features'; // Assuming this holds the 'How It Works' section
 import Footer from '../components/Footer';   // Assuming this holds the final CTA and footer
 import Testimonials from '../components/testimonial';
+  // solve some error
 
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white">
+    
       
       {/* 1. Header (Navigation Bar) */}
       <Header />
