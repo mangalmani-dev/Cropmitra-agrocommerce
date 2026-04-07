@@ -247,10 +247,13 @@
     "earnings": {
   "title": "कमाई",
   "desc": "तुमची कमाई आणि कामगिरी ट्रॅक करा"
-}
-  }
 },
-
+"cropRecommendation": {
+  "title": "पीक शिफारस",  
+  "desc": "AI आधारित पीक सुझाव प्राप्त करें"
+  }
+}
+},
 "myCrops": {
   "loading": "तुमची पिके लोड होत आहेत 🌾...",
   "title": "माझी पिके",
@@ -337,28 +340,63 @@
   "DELIVERED": "डिलीव्हर",
   "CANCELLED": "रद्द"
 },
-
   "cropRecommendation": {
     "title": "पीक शिफारस 🌱",
     "subtitle": "तुमच्या शेतासाठी AI आधारित पीक सूचना",
-    "analysisStatus": "🌱 माती आणि हवामान विश्लेषण सुरू आहे",
+    "analysisStatus": "🌱 माती आणि हवामानाचे विश्लेषण",
 
     "stats": {
       "totalRecommendations": "एकूण शिफारसी",
-      "averageScore": "सरासरी गुण",
-      "estimatedProfit": "अंदाजित एकूण नफा"
+      "averageScore": "सरासरी स्कोअर",
+      "estimatedProfit": "अंदाजे एकूण नफा"
     },
 
     "searchPlaceholder": "पीक किंवा जिल्हा शोधा...",
 
-    "labels": {
-      "soil": "माती",
-      "season": "हंगाम",
-      "water": "पाणी",
-      "yield": "उत्पादन",
-      "profit": "नफा"
+    "filters": {
+      "all": "सर्व",
+      "wheat": "गहू",
+      "cotton": "कापूस",
+      "rice": "तांदूळ",
+      "potato": "बटाटा",
+      "tomato": "टोमॅटो",
+      "soybean": "सोयाबीन"
+    },
+
+    "districts": {
+      "pune": "पुणे",
+      "nagpur": "नागपूर",
+      "nashik": "नाशिक",
+      "satara": "सातारा",
+      "kolhapur": "कोल्हापूर",
+      "amravati": "अमरावती",
+      "aurangabad": "औरंगाबाद",
+      "raigad": "रायगड",
+      "yavatmal": "यवतमाळ",
+      "solapur": "सोलापूर"
     }
+  },
+
+  "cropData": {
+  "crops": {
+    "wheat": "गहू",
+    "cotton": "कापूस",
+    "rice": "तांदूळ",
+    "potato": "बटाटा",
+    "tomato": "टोमॅटो",
+    "soybean": "सोयाबीन"
+  },
+  "districts": {
+    "pune": "पुणे",
+    "nagpur": "नागपूर",
+    "nashik": "नाशिक",
+    "satara": "सातारा",
+    "kolhapur": "कोल्हापूर",
+    "amravati": "अमरावती",
+    "aurangabad": "औरंगाबाद",
+    "raigad": "रायगड",
+    "yavatmal": "यवतमाळ",
+    "solapur": "सोलापूर"
   }
-
-
+}
 }

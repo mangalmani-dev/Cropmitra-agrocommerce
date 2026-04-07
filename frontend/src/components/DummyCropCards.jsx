@@ -1,5 +1,9 @@
+import { useTranslation } from "react-i18next";
+
+
 
 function DummyCropCards({ crop }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-white rounded-3xl p-6 shadow-lg">
       <h2 className="text-2xl font-bold">

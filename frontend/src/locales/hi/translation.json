@@ -239,8 +239,12 @@
     "earnings": {
   "title": "कमाई",
   "desc": "अपनी आय और प्रदर्शन को ट्रैक करें"
+},
+"cropRecommendation": {
+  "title": "फसल सुझाव",
+  "desc": "AI आधारित फसल सुझाव प्राप्त करें"
 }
-  }
+  }  
 },
 "myCrops": {
   "loading": "आपकी फसलें लोड हो रही हैं 🌾...",
@@ -330,27 +334,64 @@
   "CANCELLED": "रद्द"
 },
 
-  "cropRecommendation": {
-    "title": "फसल अनुशंसा 🌱",
+"cropRecommendation": {
+    "title": "फसल सुझाव 🌱",
     "subtitle": "आपके खेत के लिए AI आधारित फसल सुझाव",
-    "analysisStatus": "🌱 मिट्टी और जलवायु का विश्लेषण हो रहा है",
+    "analysisStatus": "🌱 मिट्टी और जलवायु का विश्लेषण",
 
     "stats": {
-      "totalRecommendations": "कुल अनुशंसाएँ",
+      "totalRecommendations": "कुल सुझाव",
       "averageScore": "औसत स्कोर",
       "estimatedProfit": "अनुमानित कुल लाभ"
     },
 
     "searchPlaceholder": "फसल या जिला खोजें...",
 
-    "labels": {
-      "soil": "मिट्टी",
-      "season": "मौसम",
-      "water": "पानी",
-      "yield": "उपज",
-      "profit": "लाभ"
-    }
-  }
+    "filters": {
+      "all": "सभी",
+      "wheat": "गेहूं",
+      "cotton": "कपास",
+      "rice": "चावल",
+      "potato": "आलू",
+      "tomato": "टमाटर",
+      "soybean": "सोयाबीन"
+    },
 
+    "districts": {
+      "pune": "पुणे",
+      "nagpur": "नागपुर",
+      "nashik": "नाशिक",
+      "satara": "सतारा",
+      "kolhapur": "कोल्हापुर",
+      "amravati": "अमरावती",
+      "aurangabad": "औरंगाबाद",
+      "raigad": "रायगढ़",
+      "yavatmal": "यवतमाल",
+      "solapur": "सोलापुर"
+    }
+  },
+
+  "cropData": {
+  "crops": {
+    "wheat": "गेहूं",
+    "cotton": "कपास",
+    "rice": "चावल",
+    "potato": "आलू",
+    "tomato": "टमाटर",
+    "soybean": "सोयाबीन"
+  },
+  "districts": {
+    "pune": "पुणे",
+    "nagpur": "नागपुर",
+    "nashik": "नाशिक",
+    "satara": "सतारा",
+    "kolhapur": "कोल्हापुर",
+    "amravati": "अमरावती",
+    "aurangabad": "औरंगाबाद",
+    "raigad": "रायगढ़",
+    "yavatmal": "यवतमाल",
+    "solapur": "सोलापुर"
+  }
+}
 
 }

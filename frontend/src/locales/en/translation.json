@@ -252,7 +252,11 @@
         "earnings": {
       "title": "Earnings",
       "desc": "Track your income and performance"
-    }
+    },
+      "cropRecommendation": {
+        "title": "Crop Recommendation",
+        "desc": "Get AI-powered crop suggestions"
+      }
   }
 },
 
@@ -343,6 +347,7 @@
   "DELIVERED": "Delivered",
   "CANCELLED": "Cancelled"
 },
+
   "cropRecommendation": {
     "title": "Crop Recommendation 🌱",
     "subtitle": "AI-powered crop suggestions for your farm",
@@ -356,12 +361,50 @@
 
     "searchPlaceholder": "Search crop or district...",
 
-    "labels": {
-      "soil": "Soil",
-      "season": "Season",
-      "water": "Water",
-      "yield": "Yield",
-      "profit": "Profit"
+    "filters": {
+      "all": "All",
+      "wheat": "Wheat",
+      "cotton": "Cotton",
+      "rice": "Rice",
+      "potato": "Potato",
+      "tomato": "Tomato",
+      "soybean": "Soybean"
+    },
+
+    "districts": {
+      "pune": "Pune",
+      "nagpur": "Nagpur",
+      "nashik": "Nashik",
+      "satara": "Satara",
+      "kolhapur": "Kolhapur",
+      "amravati": "Amravati",
+      "aurangabad": "Aurangabad",
+      "raigad": "Raigad",
+      "yavatmal": "Yavatmal",
+      "solapur": "Solapur"
     }
+  },
+
+  "cropData": {
+  "crops": {
+    "wheat": "Wheat",
+    "cotton": "Cotton",
+    "rice": "Rice",
+    "potato": "Potato",
+    "tomato": "Tomato",
+    "soybean": "Soybean"
+  },
+  "districts": {
+    "pune": "Pune",
+    "nagpur": "Nagpur",
+    "nashik": "Nashik",
+    "satara": "Satara",
+    "kolhapur": "Kolhapur",
+    "amravati": "Amravati",
+    "aurangabad": "Aurangabad",
+    "raigad": "Raigad",
+    "yavatmal": "Yavatmal",
+    "solapur": "Solapur"
   }
+}
 }

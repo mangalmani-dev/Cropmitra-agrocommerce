@@ -1,16 +1,16 @@
-
 import { useState, useMemo } from "react";
 import dummyCropData from "../data/dummyCropData";
 import DummyCropCards from "../components/DummyCropCards";
+import { useTranslation } from "react-i18next";
 
 const FILTERS = [
-  "All",
-  "Wheat",
-  "Cotton",
-  "Rice",
-  "Potato",
-  "Tomato",
-  "Soybean",
+  "all",
+  "wheat",
+  "cotton",
+  "rice",
+  "potato",
+  "tomato",
+  "soybean",
 ];
 
 function StatCard({ label, value }) {
@@ -34,22 +34,34 @@ function StatCard({ label, value }) {
 }
 
 export default function CropRecommendation() {
-  const [activeFilter, setActiveFilter] = useState("All");
+  const { t } = useTranslation();
+
+  const [activeFilter, setActiveFilter] = useState("all");
   const [searchQ, setSearchQ] = useState("");
 
   const filtered = useMemo(() => {
     return dummyCropData.filter((item) => {
       const matchFilter =
-        activeFilter === "All" || item.crop === activeFilter;
+        activeFilter === "all" || item.crop === activeFilter;
+
+      const searchText = searchQ.toLowerCase();
+
+      const translatedCrop = t(
+        `cropRecommendation.filters.${item.crop}`
+      ).toLowerCase();
+
+      const translatedDistrict = t(
+        `cropRecommendation.districts.${item.district}`
+      ).toLowerCase();
 
       const matchSearch =
         !searchQ ||
-        item.crop.toLowerCase().includes(searchQ.toLowerCase()) ||
-        item.district.toLowerCase().includes(searchQ.toLowerCase());
+        translatedCrop.includes(searchText) ||
+        translatedDistrict.includes(searchText);
 
       return matchFilter && matchSearch;
     });
-  }, [activeFilter, searchQ]);
+  }, [activeFilter, searchQ, t]);
 
   const avgScore = Math.round(
     dummyCropData.reduce((a, b) => a + b.score, 0) /
@@ -69,16 +81,17 @@ export default function CropRecommendation() {
         <div className="flex justify-between items-center mb-10 flex-wrap gap-4">
           <div>
             <h1 className="text-5xl font-extrabold bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
-              Crop Recommendation
+              {t("cropRecommendation.title")}
             </h1>
+
             <p className="text-gray-500 mt-3 text-lg">
-              AI-powered crop suggestions for your farm
+              {t("cropRecommendation.subtitle")}
             </p>
           </div>
 
           <div className="bg-white shadow-md rounded-2xl px-5 py-3">
             <span className="text-green-700 font-semibold">
-              🌱 Analysing soil & climate
+              {t("cropRecommendation.analysisStatus")}
             </span>
           </div>
         </div>
@@ -86,15 +99,23 @@ export default function CropRecommendation() {
         {/* STATS */}
         <div className="grid md:grid-cols-3 gap-6 mb-10">
           <StatCard
-            label="Total Recommendations"
+            label={t(
+              "cropRecommendation.stats.totalRecommendations"
+            )}
             value={dummyCropData.length}
           />
+
           <StatCard
-            label="Average Score"
+            label={t(
+              "cropRecommendation.stats.averageScore"
+            )}
             value={`${avgScore}%`}
           />
+
           <StatCard
-            label="Est. Total Profit"
+            label={t(
+              "cropRecommendation.stats.estimatedProfit"
+            )}
             value={`₹${Math.round(totalProfit / 1000)}k`}
           />
         </div>
@@ -111,13 +132,15 @@ export default function CropRecommendation() {
                   : "bg-white shadow text-gray-700"
               }`}
             >
-              {filter}
+              {t(`cropRecommendation.filters.${filter}`)}
             </button>
           ))}
 
           <input
             type="text"
-            placeholder="Search crop or district..."
+            placeholder={t(
+              "cropRecommendation.searchPlaceholder"
+            )}
             value={searchQ}
             onChange={(e) => setSearchQ(e.target.value)}
             className="
@@ -142,4 +165,3 @@ export default function CropRecommendation() {
     </div>
   );
 }
-
