@@ -1,5 +1,5 @@
 // profile top bar
-import ProfileTopBar from "../components/ProfileTopBar";
+import ProfileTopBar from "../components/ProfileTopbar";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
