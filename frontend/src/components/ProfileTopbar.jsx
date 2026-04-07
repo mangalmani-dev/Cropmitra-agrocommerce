@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import FarmerApplyForm from "./FarmerApplyForm";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
+ // updated profile top bar
 const ProfileTopBar = () => {
 
   const { user, loading, uploadProfileImage } = useAuthStore();
