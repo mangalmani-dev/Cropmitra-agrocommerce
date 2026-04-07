@@ -1,3 +1,4 @@
+// profile top bar
 import ProfileTopBar from "../components/ProfileTopBar";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";

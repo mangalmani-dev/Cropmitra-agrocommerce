@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useFarmerOrderStore } from "../store/farmerOrderStore";
-import ProfileTopBar from "../components/ProfileTopbar";
+import ProfileTopBar from "../components/ProfileTopBar";
 import { useTranslation } from "react-i18next";
 
 const FarmerOrders = () => {
