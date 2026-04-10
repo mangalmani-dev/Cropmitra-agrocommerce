@@ -1,9 +1,7 @@
 import { create } from "zustand";
-import axios from "axios";
 import { axiosInstance } from "../libs/axios";
 
 export const usePaymentStore = create((set) => ({
-
   loading: false,
 
   handleOnlinePayment: async ({
@@ -15,9 +13,7 @@ export const usePaymentStore = create((set) => ({
     clearCart,
     navigate
   }) => {
-
     try {
-
       set({ loading: true });
 
       if (!selectedAddress) {
@@ -25,12 +21,10 @@ export const usePaymentStore = create((set) => ({
         return;
       }
 
-      // ⭐ STEP 1 — Get Razorpay Key
-      const { data: { key } } = await axios.get(
-        "http://localhost:4000/api/getkey"
-      );
+      // STEP 1 — Get Razorpay Key
+      const { data: { key } } = await axiosInstance.get("/getkey");
 
-      // ⭐ STEP 2 — Place Order
+      // STEP 2 — Place Order
       const response = await placeOrder({
         items: cart.map(item => ({
           crop: item.crop._id,
@@ -53,7 +47,7 @@ export const usePaymentStore = create((set) => ({
         return;
       }
 
-      // ⭐ STEP 3 — Create Razorpay Order
+      // STEP 3 — Create Razorpay Order
       const { data } = await axiosInstance.post(
         "/payment/create-order",
         { orderId: order._id }
@@ -61,7 +55,7 @@ export const usePaymentStore = create((set) => ({
 
       const rpOrder = data.razorpayOrder;
 
-      // ⭐ STEP 4 — Popup
+      // STEP 4 — Popup
       const options = {
         key,
         amount: rpOrder.amount,
@@ -86,5 +80,4 @@ export const usePaymentStore = create((set) => ({
       set({ loading: false });
     }
   }
-
 }));
