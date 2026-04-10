@@ -28,12 +28,21 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 // CORS
-app.use(
+ app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: [
+      "http://localhost:5173",
+      process.env.CLIENT_URL,
+    ],
     credentials: true,
   })
 );
+
+// health check route
+// health route
+app.get("/", (req, res) => {
+  res.send("Crop Mitra backend is running 🚀");
+});
 
 // routes
 app.use("/api/auth", authRoutes);
@@ -62,10 +71,14 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: [
+      "http://localhost:5173",
+      process.env.CLIENT_URL,
+    ],
     credentials: true,
   },
 });
+
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
